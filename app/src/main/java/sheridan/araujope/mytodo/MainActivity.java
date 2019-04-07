@@ -1,5 +1,6 @@
 package sheridan.araujope.mytodo;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import butterknife.OnClick;
 import sheridan.araujope.mytodo.model.TaskEntity;
 import sheridan.araujope.mytodo.ui.TasksAdapter;
 import sheridan.araujope.mytodo.utilities.SampleData;
@@ -28,6 +30,12 @@ public class MainActivity extends AppCompatActivity {
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
 
+    @OnClick(R.id.fab)
+    void fabClickHandler() {
+        Intent intent = new Intent(this, EditorActivity.class);
+        startActivity(intent);
+    }
+
     private List<TaskEntity> tasksData = new ArrayList<>();
     private TasksAdapter mAdapter;
 
@@ -40,15 +48,6 @@ public class MainActivity extends AppCompatActivity {
 
         ButterKnife.bind(this);
         initRecyclerView();
-
-        FloatingActionButton fab = findViewById(R.id.fab);
-        fab.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG)
-                        .setAction("Action", null).show();
-            }
-        });
 
         tasksData.addAll(SampleData.getTasks());
         for(TaskEntity task : tasksData) {
