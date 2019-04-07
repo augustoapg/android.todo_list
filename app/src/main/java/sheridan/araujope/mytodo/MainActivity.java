@@ -11,15 +11,25 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import sheridan.araujope.mytodo.model.TaskEntity;
+import sheridan.araujope.mytodo.ui.TasksAdapter;
+import sheridan.araujope.mytodo.utilities.SampleData;
 
+import android.util.Log;
 import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
     @BindView(R.id.recycler_view)
     RecyclerView mRecyclerView;
+
+    private List<TaskEntity> tasksData = new ArrayList<>();
+    private TasksAdapter mAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,8 +38,8 @@ public class MainActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
-//        ButterKnife.bind(this);
-//        initRecyclerView();
+        ButterKnife.bind(this);
+        initRecyclerView();
 
         FloatingActionButton fab = findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener() {
@@ -39,14 +49,22 @@ public class MainActivity extends AppCompatActivity {
                         .setAction("Action", null).show();
             }
         });
+
+        tasksData.addAll(SampleData.getTasks());
+        for(TaskEntity task : tasksData) {
+            Log.i("PlainOlTasks", task.toString());
+        }
     }
 
-//    private void initRecyclerView() {
-//        // make each item on the list the same height
-//        mRecyclerView.setHasFixedSize(true);
-//        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
-//        mRecyclerView.setLayoutManager(layoutManager);
-//    }
+    private void initRecyclerView() {
+        // make each item on the list the same height
+        mRecyclerView.setHasFixedSize(true);
+        LinearLayoutManager layoutManager = new LinearLayoutManager(this);
+        mRecyclerView.setLayoutManager(layoutManager);
+
+        mAdapter = new TasksAdapter(tasksData, this);
+        mRecyclerView.setAdapter(mAdapter);
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
