@@ -6,7 +6,7 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.List;
 
-import sheridan.araujope.mytodo.model.TaskEntity;
+import sheridan.araujope.mytodo.database.TaskEntity;
 
 public class SampleData {
 
@@ -37,8 +37,8 @@ public class SampleData {
         List<TaskEntity> tasks = new ArrayList<>();
         // diff is used for sorting by date
         tasks.add(new TaskEntity(1, SAMPLE_TASK_TITLE_1, SAMPLE_TASK_DESC_1, getDate(0)));
-        tasks.add(new TaskEntity(1, SAMPLE_TASK_TITLE_2, SAMPLE_TASK_DESC_2, getDate(-1)));
-        tasks.add(new TaskEntity(1, SAMPLE_TASK_TITLE_3, SAMPLE_TASK_DESC_3, getDate(-2)));
+        tasks.add(new TaskEntity(2, SAMPLE_TASK_TITLE_2, SAMPLE_TASK_DESC_2, getDate(-1)));
+        tasks.add(new TaskEntity(3, SAMPLE_TASK_TITLE_3, SAMPLE_TASK_DESC_3, getDate(-2)));
         return tasks;
     }
 }

@@ -3,22 +3,20 @@ package sheridan.araujope.mytodo;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
-
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import sheridan.araujope.mytodo.model.TaskEntity;
+import sheridan.araujope.mytodo.database.TaskEntity;
 import sheridan.araujope.mytodo.ui.TasksAdapter;
 import sheridan.araujope.mytodo.utilities.SampleData;
+import sheridan.araujope.mytodo.viewmodel.MainViewModel;
 
 import android.util.Log;
-import android.view.View;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -38,6 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
     private List<TaskEntity> tasksData = new ArrayList<>();
     private TasksAdapter mAdapter;
+    private MainViewModel mViewModel;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -47,12 +46,17 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
+        initViewModel();
         initRecyclerView();
 
-        tasksData.addAll(SampleData.getTasks());
+        tasksData.addAll(mViewModel.mTasks);
         for(TaskEntity task : tasksData) {
             Log.i("PlainOlTasks", task.toString());
         }
+    }
+
+    private void initViewModel() {
+        mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
     }
 
     private void initRecyclerView() {

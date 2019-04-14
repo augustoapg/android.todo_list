@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import sheridan.araujope.mytodo.R;
-import sheridan.araujope.mytodo.model.TaskEntity;
+import sheridan.araujope.mytodo.database.TaskEntity;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 

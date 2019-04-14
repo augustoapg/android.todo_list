@@ -1,13 +1,20 @@
-package sheridan.araujope.mytodo.model;
+package sheridan.araujope.mytodo.database;
 
 import java.util.Date;
 
+import androidx.room.Entity;
+import androidx.room.Ignore;
+import androidx.room.PrimaryKey;
+
+@Entity(tableName = "tasks")
 public class TaskEntity {
+    @PrimaryKey(autoGenerate = true)
     private int id;
     private String title;
     private String description;
     private Date dueDate;
 
+    @Ignore
     public TaskEntity() {
     }
 
@@ -18,6 +25,7 @@ public class TaskEntity {
         this.dueDate = dueDate;
     }
 
+    @Ignore
     public TaskEntity(String title, String description, Date dueDate) {
         this.title = title;
         this.description = description;
