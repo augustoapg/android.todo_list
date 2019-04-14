@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
+import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -13,7 +14,6 @@ import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sheridan.araujope.mytodo.database.TaskEntity;
 import sheridan.araujope.mytodo.ui.TasksAdapter;
-import sheridan.araujope.mytodo.utilities.SampleData;
 import sheridan.araujope.mytodo.viewmodel.MainViewModel;
 
 import android.util.Log;
@@ -46,17 +46,27 @@ public class MainActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
 
         ButterKnife.bind(this);
-        initViewModel();
         initRecyclerView();
-
-        tasksData.addAll(mViewModel.mTasks);
-        for(TaskEntity task : tasksData) {
-            Log.i("PlainOlTasks", task.toString());
-        }
+        initViewModel();
     }
 
     private void initViewModel() {
+        final Observer<List<TaskEntity>> tasksObserver = new Observer<List<TaskEntity>>() {
+            @Override
+            public void onChanged(List<TaskEntity> taskEntities) {
+                tasksData.clear();
+                tasksData.addAll(taskEntities);
+
+                if(mAdapter == null) {
+                    mAdapter = new TasksAdapter(tasksData, MainActivity.this);
+                    mRecyclerView.setAdapter(mAdapter);
+                } else {
+                    mAdapter.notifyDataSetChanged();
+                }
+            }
+        };
         mViewModel = ViewModelProviders.of(this).get(MainViewModel.class);
+        mViewModel.mTasks.observe(this, tasksObserver);
     }
 
     private void initRecyclerView() {
@@ -64,9 +74,6 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
-
-        mAdapter = new TasksAdapter(tasksData, this);
-        mRecyclerView.setAdapter(mAdapter);
     }
 
     @Override
@@ -84,10 +91,22 @@ public class MainActivity extends AppCompatActivity {
         int id = item.getItemId();
 
         //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
+        if (id == R.id.action_add_sample_data) {
+            addSampleData();
+            return true;
+        } else if (id == R.id.action_delete_all) {
+            deleteAllTasks();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    private void deleteAllTasks() {
+        mViewModel.deleteAllTasks();
+    }
+
+    private void addSampleData() {
+        mViewModel.addSampleData();
     }
 }

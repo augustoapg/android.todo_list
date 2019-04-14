@@ -6,14 +6,26 @@ import java.util.List;
 
 import androidx.annotation.NonNull;
 import androidx.lifecycle.AndroidViewModel;
+import androidx.lifecycle.LiveData;
+import sheridan.araujope.mytodo.database.AppRepository;
 import sheridan.araujope.mytodo.database.TaskEntity;
-import sheridan.araujope.mytodo.utilities.SampleData;
 
 public class MainViewModel extends AndroidViewModel {
 
-    public List<TaskEntity> mTasks = SampleData.getTasks();
+    public LiveData<List<TaskEntity>> mTasks;
+    private AppRepository mRepository;
 
     public MainViewModel(@NonNull Application application) {
         super(application);
+        mRepository = AppRepository.getInstance(application.getApplicationContext());
+        mTasks = mRepository.mTasks;
+    }
+
+    public void addSampleData() {
+        mRepository.addSampleData();
+    }
+
+    public void deleteAllTasks() {
+        mRepository.deleteAllTasks();
     }
 }
