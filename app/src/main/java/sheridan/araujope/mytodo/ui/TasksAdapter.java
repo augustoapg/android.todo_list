@@ -1,10 +1,15 @@
 package sheridan.araujope.mytodo.ui;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 
@@ -12,8 +17,11 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
 import butterknife.ButterKnife;
+import sheridan.araujope.mytodo.EditorActivity;
 import sheridan.araujope.mytodo.R;
 import sheridan.araujope.mytodo.database.TaskEntity;
+
+import static sheridan.araujope.mytodo.utilities.Constants.TASK_ID_KEY;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
@@ -38,6 +46,15 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         final TaskEntity task = mTasks.get(position);
         holder.mTextView.setText(task.getTitle());
+
+        holder.mFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(mContext, EditorActivity.class);
+                intent.putExtra(TASK_ID_KEY, task.getId());
+                mContext.startActivity(intent);
+            }
+        });
     }
 
     @Override
@@ -48,6 +65,9 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     public class ViewHolder extends RecyclerView.ViewHolder {
         @BindView(R.id.task_text)
         TextView mTextView;
+
+        @BindView(R.id.fab)
+        FloatingActionButton mFab;
 
         public ViewHolder(@NonNull View itemView) {
             super(itemView);

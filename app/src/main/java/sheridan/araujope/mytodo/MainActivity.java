@@ -13,7 +13,9 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import sheridan.araujope.mytodo.database.TaskEntity;
+import sheridan.araujope.mytodo.ui.AboutFragment;
 import sheridan.araujope.mytodo.ui.TasksAdapter;
+import sheridan.araujope.mytodo.utilities.Constants;
 import sheridan.araujope.mytodo.viewmodel.MainViewModel;
 
 import android.util.Log;
@@ -96,6 +98,10 @@ public class MainActivity extends AppCompatActivity {
             return true;
         } else if (id == R.id.action_delete_all) {
             deleteAllTasks();
+            return true;
+        } else if (id == R.id.about) {
+            AboutFragment aboutFragment = AboutFragment.newInstance();
+            aboutFragment.show(getSupportFragmentManager(), Constants.ABOUT_FRAGMENT);
             return true;
         }
 

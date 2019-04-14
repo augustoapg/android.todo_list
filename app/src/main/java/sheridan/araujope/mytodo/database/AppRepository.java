@@ -49,4 +49,17 @@ public class AppRepository {
             }
         });
     }
+
+    public TaskEntity getTaskById(int taskId) {
+        return mDb.taskDao().getTaskById(taskId);
+    }
+
+    public void insertTask(TaskEntity task) {
+        executor.execute(new Runnable() {
+            @Override
+            public void run() {
+                mDb.taskDao().insertTask(task);
+            }
+        });
+    }
 }
