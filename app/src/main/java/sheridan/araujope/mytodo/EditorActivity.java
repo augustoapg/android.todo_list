@@ -14,6 +14,7 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import sheridan.araujope.mytodo.database.TaskEntity;
 import sheridan.araujope.mytodo.ui.DatePickerFragment;
+import sheridan.araujope.mytodo.ui.DeleteConfirmationFragment;
 import sheridan.araujope.mytodo.viewmodel.EditorViewModel;
 
 import android.text.format.DateFormat;
@@ -29,9 +30,11 @@ import java.util.Calendar;
 import java.util.Date;
 
 import static sheridan.araujope.mytodo.utilities.Constants.DATE_PICKER_FRAGMENT;
+import static sheridan.araujope.mytodo.utilities.Constants.DELETE_CONFIRM_FRAGMENT;
 import static sheridan.araujope.mytodo.utilities.Constants.TASK_ID_KEY;
 
-public class EditorActivity extends AppCompatActivity implements DatePickerFragment.DateSetListener{
+public class EditorActivity extends AppCompatActivity
+        implements DatePickerFragment.DateSetListener,DeleteConfirmationFragment.ConfirmListener{
 
     @BindView(R.id.task_text)
     TextView mTextView;
@@ -89,6 +92,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerFragm
             setTitle(R.string.new_task);
         } else {
             setTitle(R.string.edit_task);
+            mNewTask = false;
             int taskId = extras.getInt(TASK_ID_KEY);
             mViewModel.loadData(taskId);
         }
@@ -117,9 +121,17 @@ public class EditorActivity extends AppCompatActivity implements DatePickerFragm
             saveAndReturn();
             return true;
         } else if (item.getItemId() == R.id.action_delete) {
-            mViewModel.deleteTask();
+            DeleteConfirmationFragment confirmFragment
+                    = DeleteConfirmationFragment.newInstance(0, getString(R.string.delete_confirm_message));
+            confirmFragment.show(getSupportFragmentManager(), DELETE_CONFIRM_FRAGMENT);
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onConfirmed(int dialogID) {
+        mViewModel.deleteTask();
+        finish();
     }
 
     @Override
