@@ -67,4 +67,8 @@ public class EditorViewModel extends AndroidViewModel {
         }
         mRepository.insertTask(task);
     }
+
+    public void deleteTask() {
+        mRepository.deleteTask(mLiveTask.getValue());
+    }
 }

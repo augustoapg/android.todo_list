@@ -17,6 +17,8 @@ import sheridan.araujope.mytodo.ui.DatePickerFragment;
 import sheridan.araujope.mytodo.viewmodel.EditorViewModel;
 
 import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
@@ -83,6 +85,7 @@ public class EditorActivity extends AppCompatActivity implements DatePickerFragm
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
             mDate = new Date();
+            mNewTask = true;
             setTitle(R.string.new_task);
         } else {
             setTitle(R.string.edit_task);
@@ -93,7 +96,6 @@ public class EditorActivity extends AppCompatActivity implements DatePickerFragm
         mEditDateButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Calendar calendar = Calendar.getInstance();
                 DialogFragment fragment = DatePickerFragment.getInstance(mDate);
                 fragment.show(getSupportFragmentManager(), DATE_PICKER_FRAGMENT);
             }
@@ -101,10 +103,21 @@ public class EditorActivity extends AppCompatActivity implements DatePickerFragm
     }
 
     @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        if(!mNewTask) {
+            MenuInflater inflater = getMenuInflater();
+            inflater.inflate(R.menu.menu_editor, menu);
+        }
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         if(item.getItemId() == android.R.id.home) {
             saveAndReturn();
             return true;
+        } else if (item.getItemId() == R.id.action_delete) {
+            mViewModel.deleteTask();
         }
         return super.onOptionsItemSelected(item);
     }
