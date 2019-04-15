@@ -1,12 +1,27 @@
+/**
+ * Project: My To Do
+ * Author: Augusto A P Goncalez
+ * Date: Apr. 17, 2019
+ *
+ * Description: This app allows a user to create new tasks with title, due date and description. It
+ * also allows the user to edit any of the fields, as well as deleting a task.
+ */
+
 package sheridan.araujope.mytodo;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModelProviders;
+import androidx.recyclerview.widget.DividerItemDecoration;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import butterknife.BindView;
@@ -17,13 +32,6 @@ import sheridan.araujope.mytodo.ui.AboutFragment;
 import sheridan.araujope.mytodo.ui.TasksAdapter;
 import sheridan.araujope.mytodo.utilities.Constants;
 import sheridan.araujope.mytodo.viewmodel.MainViewModel;
-
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuItem;
-
-import java.util.ArrayList;
-import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -76,6 +84,10 @@ public class MainActivity extends AppCompatActivity {
         mRecyclerView.setHasFixedSize(true);
         LinearLayoutManager layoutManager = new LinearLayoutManager(this);
         mRecyclerView.setLayoutManager(layoutManager);
+
+        DividerItemDecoration divider = new DividerItemDecoration(mRecyclerView.getContext(),
+                layoutManager.getOrientation());
+        mRecyclerView.addItemDecoration(divider);
     }
 
     @Override

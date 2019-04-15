@@ -1,10 +1,27 @@
+/**
+ * Project: My To Do
+ * Author: Augusto A P Goncalez
+ * Date: Apr. 17, 2019
+ *
+ * Description: This app allows a user to create new tasks with title, due date and description. It
+ * also allows the user to edit any of the fields, as well as deleting a task.
+ */
+
 package sheridan.araujope.mytodo;
 
 import android.os.Bundle;
+import android.text.format.DateFormat;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
+import android.view.View;
+import android.widget.ImageButton;
+import android.widget.TextView;
 
-import com.google.android.material.floatingactionbutton.FloatingActionButton;
-import com.google.android.material.snackbar.Snackbar;
+import java.util.Calendar;
+import java.util.Date;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.DialogFragment;
@@ -17,20 +34,10 @@ import sheridan.araujope.mytodo.ui.DatePickerFragment;
 import sheridan.araujope.mytodo.ui.DeleteConfirmationFragment;
 import sheridan.araujope.mytodo.viewmodel.EditorViewModel;
 
-import android.text.format.DateFormat;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
-import android.view.View;
-import android.widget.ImageButton;
-import android.widget.TextView;
-
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
-
+import static sheridan.araujope.mytodo.utilities.Constants.DATE_KEY;
 import static sheridan.araujope.mytodo.utilities.Constants.DATE_PICKER_FRAGMENT;
 import static sheridan.araujope.mytodo.utilities.Constants.DELETE_CONFIRM_FRAGMENT;
+import static sheridan.araujope.mytodo.utilities.Constants.EDITING_KEY;
 import static sheridan.araujope.mytodo.utilities.Constants.TASK_ID_KEY;
 
 public class EditorActivity extends AppCompatActivity
@@ -51,7 +58,7 @@ public class EditorActivity extends AppCompatActivity
     ImageButton mEditDateButton;
 
     private EditorViewModel mViewModel;
-    private boolean mNewTask;
+    private boolean mNewTask, mEditing;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +71,12 @@ public class EditorActivity extends AppCompatActivity
 
         ButterKnife.bind(this);
 
+        if(savedInstanceState != null) {
+            mEditing = savedInstanceState.getBoolean(EDITING_KEY);
+            mDate = (Date) savedInstanceState.getSerializable(DATE_KEY);
+            mTaskDueDate.setText(DateFormat.getLongDateFormat(this).format(mDate));
+        }
+
         initViewModel();
     }
 
@@ -73,7 +86,7 @@ public class EditorActivity extends AppCompatActivity
         mViewModel.mLiveTask.observe(this, new Observer<TaskEntity>() {
             @Override
             public void onChanged(TaskEntity taskEntity) {
-                if(taskEntity != null) {
+                if(taskEntity != null && !mEditing) {
                     mTaskTitle.setText(taskEntity.getTitle());
                     mTextView.setText(taskEntity.getDescription());
                     if(taskEntity.getDueDate() != null) {
@@ -87,7 +100,6 @@ public class EditorActivity extends AppCompatActivity
 
         Bundle extras = getIntent().getExtras();
         if(extras == null) {
-            mDate = new Date();
             mNewTask = true;
             setTitle(R.string.new_task);
         } else {
@@ -155,5 +167,12 @@ public class EditorActivity extends AppCompatActivity
         calendar.set(year, month, day, hour, minute);
         mDate = calendar.getTime();
         mTaskDueDate.setText(DateFormat.getLongDateFormat(this).format(mDate));
+    }
+
+    @Override
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
+        outState.putBoolean(EDITING_KEY, true);
+        outState.putSerializable(DATE_KEY, mDate);
+        super.onSaveInstanceState(outState);
     }
 }
